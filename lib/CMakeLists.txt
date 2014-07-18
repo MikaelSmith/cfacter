@@ -6,12 +6,15 @@ set(LIBFACTER_VERSION_PATCH 0)
 set(CMAKE_CXX_FLAGS ${FACTER_CXX_FLAGS})
 
 # Add the library target without a prefix (name already has the 'lib')
-add_library(libfacter SHARED $<TARGET_OBJECTS:libfacter_common_sources> $<TARGET_OBJECTS:libfacter_posix_sources> $<TARGET_OBJECTS:libfacter_platform_sources>)
+add_library(libfacter SHARED)
 set_target_properties(libfacter PROPERTIES PREFIX "" VERSION "${LIBFACTER_VERSION_MAJOR}.${LIBFACTER_VERSION_MINOR}.${LIBFACTER_VERSION_PATCH}")
 install(TARGETS libfacter DESTINATION lib)
 
 # Link in additional libraries
 target_link_libraries(libfacter
+    libfacter_common_sources
+    libfacter_posix_sources
+    libfacter_platform_sources
     pthread
     ${RE2_LIBRARIES}
     ${LOG4CXX_LIBRARIES}

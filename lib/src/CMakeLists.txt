@@ -1,5 +1,5 @@
 # Set the common (platform-independent) sources
-add_library(libfacter_common_sources OBJECT
+add_library(libfacter_common_sources STATIC
     "${CMAKE_CURRENT_LIST_DIR}/facterlib.cc"
     "${CMAKE_CURRENT_LIST_DIR}/facts/array_value.cc"
     "${CMAKE_CURRENT_LIST_DIR}/facts/external/json_resolver.cc"
@@ -19,7 +19,7 @@ add_library(libfacter_common_sources OBJECT
 
 # Set the POSIX sources if on a POSIX platform
 if (UNIX)
-    add_library(libfacter_posix_sources OBJECT
+    add_library(libfacter_posix_sources STATIC
         "${CMAKE_CURRENT_LIST_DIR}/execution/posix/execution.cc"
         "${CMAKE_CURRENT_LIST_DIR}/facts/external/posix/execution_resolver.cc"
         "${CMAKE_CURRENT_LIST_DIR}/facts/posix/dmi_resolver.cc"
@@ -40,7 +40,7 @@ endif()
 
 # Set the platform-specific sources
 if ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
-    add_library(libfacter_platform_sources OBJECT
+    add_library(libfacter_platform_sources STATIC
         "${CMAKE_CURRENT_LIST_DIR}/facts/osx/dmi_resolver.cc"
         "${CMAKE_CURRENT_LIST_DIR}/facts/bsd/networking_resolver.cc"
         "${CMAKE_CURRENT_LIST_DIR}/facts/bsd/uptime_resolver.cc"
@@ -53,7 +53,7 @@ if ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
         "${CMAKE_CURRENT_LIST_DIR}/util/bsd/scoped_ifaddrs.cc"
     )
 elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
-    add_library(libfacter_platform_sources OBJECT
+    add_library(libfacter_platform_sources STATIC
         "${CMAKE_CURRENT_LIST_DIR}/facts/bsd/networking_resolver.cc"
         "${CMAKE_CURRENT_LIST_DIR}/facts/linux/block_device_resolver.cc"
         "${CMAKE_CURRENT_LIST_DIR}/facts/linux/dmi_resolver.cc"
