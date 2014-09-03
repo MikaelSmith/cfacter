@@ -18,3 +18,5 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 add_executable(cfacter ${CFACTER_SOURCES})
 target_link_libraries(cfacter libfacter ${Boost_LIBRARIES})
 install(TARGETS cfacter DESTINATION bin)
+
+add_dependencies(libfacter Boost)

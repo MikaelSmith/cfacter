@@ -77,6 +77,9 @@ include_directories(
 add_executable(libfacter_test ${LIBFACTER_TESTS_COMMON_SOURCES} ${LIBFACTER_TESTS_PLATFORM_SOURCES} ${LIBFACTER_TESTS_POSIX_SOURCES})
 target_link_libraries(libfacter_test libfacter ${YAMLCPP_LIBRARIES} ${Boost_LIBRARIES} ${GMOCK_LIBRARIES} ${OPENSSL_LIBRARIES})
 
+add_dependencies(libfacter yamlcpp)
+add_dependencies(libfacter Boost)
+
 # Generate a file containing the above version numbers
 configure_file (
     "${CMAKE_CURRENT_LIST_DIR}/fixtures.hpp.in"

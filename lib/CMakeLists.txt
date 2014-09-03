@@ -155,6 +155,10 @@ target_link_libraries(libfacter
     ${LIBFACTER_PLATFORM_LIBRARIES}
 )
 
+# Add dependency on external projects.
+add_dependencies(libfacter Boost)
+add_dependencies(libfacter yamlcpp)
+
 set_target_properties(libfacter PROPERTIES PREFIX "" IMPORT_PREFIX "" VERSION "${LIBFACTER_VERSION_MAJOR}.${LIBFACTER_VERSION_MINOR}.${LIBFACTER_VERSION_PATCH}")
 if (WIN32)
     install(TARGETS libfacter DESTINATION bin)
