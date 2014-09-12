@@ -3,6 +3,7 @@
 .DS_Store
 /nbproject
 compile_commands.json
+.idea/
 
 # Generated files
 /lib/inc/facter/version.h
