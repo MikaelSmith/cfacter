@@ -53,4 +53,3 @@ RUN wget http://sourceforge.net/projects/cppcheck/files/cppcheck/1.67/cppcheck-1
     make install SRCDIR=build CFGDIR=/usr/local/cfg HAVE_RULES=yes > /dev/null && \
     cd .. && \
     rm -r cppcheck-1.67.tar.bz2 cppcheck-1.67
-
