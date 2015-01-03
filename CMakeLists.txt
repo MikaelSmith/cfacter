@@ -9,14 +9,16 @@ endif()
 option(BOOST_STATIC "Use Boost's static libraries" OFF)
 option(YAMLCPP_STATIC "Use yaml-cpp's static libraries" OFF)
 option(COVERALLS "Generate code coverage for Coveralls.io" OFF)
+option(SANITIZE_ADDRESS "Compile with address sanitizer enabled" OFF)
 
 enable_testing()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 include(cotire)
-if (MINGW)
+if (MINGW OR SANITIZE_ADDRESS)
     # MinGW crashes with large pre-compiled headers; ours definitely exceeds the limit.
     # See http://stackoverflow.com/questions/10841306/cc1plus-exe-crash-when-using-large-precompiled-header-file
+    # Pre-compiled headers also don't work with the sanitizer compile options.
     set(PRECOMPILED_HEADERS FALSE)
 else()
     set(PRECOMPILED_HEADERS TRUE)
@@ -75,7 +77,7 @@ if ("${CMAKE_SYSTEM_NAME}" MATCHES "SunOS")
     endif()
     find_library(KSTAT_LIBRARY kstat)
     if (KSTAT_LIBRARY)
-      set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${KSTAT_LIBRARY})
+        set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${KSTAT_LIBRARY})
         link_libraries(kstat)
     endif()
 endif()
@@ -110,6 +112,12 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     else()
         set(FACTER_CXX_FLAGS "${FACTER_CXX_FLAGS} -Wno-deprecated")
     endif()
+
+    # Add sanitizers
+    if (SANITIZE_ADDRESS)
+        set(FACTER_CXX_FLAGS "${FACTER_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+    endif()
+
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # maybe-uninitialized is a relatively new GCC warning that Boost 1.57 violates; disable it for now until it's available in Clang as well
     # it's also sometimes wrong
@@ -194,7 +202,7 @@ else()
         "-runtime/int"            # Some C types are needed for library interop
         "-runtime/explicit"       # Using implicit conversion from string to regex for regex calls.
         "-build/header_guard"     # Disable header guards (cpplint doesn't yet support enforcing #pragma once)
-    )
+        )
 
     file(GLOB_RECURSE ALL_SOURCES lib/*.cc lib/*.h lib/*.hpp exe/*.cc exe/*.h exe/*.hpp)
 
@@ -212,12 +220,12 @@ else()
     add_custom_target(cpplint
         COMMAND ${PYTHON_EXECUTABLE} ${CPPLINT_PATH} ${CPPLINT_ARGS} ${ALL_SOURCES}
         VERBATIM
-    )
+        )
 endif()
 
 add_custom_target(cppcheck
     COMMAND cppcheck --enable=performance "${PROJECT_SOURCE_DIR}/lib" "${PROJECT_SOURCE_DIR}/exe"
-)
+    )
 
 add_subdirectory(lib)
 add_subdirectory(exe)
