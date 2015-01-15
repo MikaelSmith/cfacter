@@ -58,24 +58,26 @@ describe Facter do
       ])
 
       facts = Facter.to_hash
-      facts['yaml_fact1'].should be_a String
-      facts['yaml_fact2'].should be_a Integer
-      facts['yaml_fact3'].should satisfy { |v| v == true || v == false }
+      facts['yaml_fact|'].should be_a String
+      facts['yaml.fact2'].should be_a Integer
+      facts['yaml fact3'].should satisfy { |v| v == true || v == false }
       facts['yaml_fact4'].should be_a Float
       facts['yaml_fact5'].should be_a Array
       facts['yaml_fact6'].should be_a Hash
-      facts['json_fact1'].should be_a String
-      facts['json_fact2'].should be_a Integer
-      facts['json_fact3'].should satisfy { |v| v == true || v == false }
+      facts['json_fact|'].should be_a String
+      facts['json.fact2'].should be_a Integer
+      facts['json fact3'].should satisfy { |v| v == true || v == false }
       facts['json_fact4'].should be_a Float
       facts['json_fact5'].should be_a Array
       facts['json_fact6'].should be_a Hash
       facts['exe_fact1'].should be_a String
       facts['exe_fact2'].should be_a String
       facts['exe_fact3'].should be_nil
+      facts['exe fact.4'].should be_a String
       facts['txt_fact1'].should be_a String
       facts['txt_fact2'].should be_a String
       facts['txt_fact3'].should be_nil
+      facts['txt fact.4'].should be_a String
     end
 
     it 'should set search paths' do
