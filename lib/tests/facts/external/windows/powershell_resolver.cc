@@ -36,7 +36,7 @@ TEST(facter_facts_external_windows_powershell_resolver, resolve_execution) {
     ASSERT_NE(nullptr, facts.get<string_value>("ps1_fact2"));
     ASSERT_EQ("", facts.get<string_value>("ps1_fact2")->value());
     ASSERT_EQ(nullptr, facts.get<string_value>("ps1_fact3"));
-    ASSERT_NE(nullptr, facts.get<string_value>("ps1_fact4"));
-    ASSERT_EQ(nullptr, facts.get<string_value>("PS1_fact4"));
-    ASSERT_EQ("value2", facts.get<string_value>("ps1_fact4")->value());
+    ASSERT_NE(nullptr, facts.get<string_value>("ps1 fact.4"));
+    ASSERT_EQ(nullptr, facts.get<string_value>("PS1 fact.4"));
+    ASSERT_EQ("value2", facts.get<string_value>("ps1 fact.4")->value());
 }

@@ -38,12 +38,12 @@ TEST(facter_facts_external_json_resolver, resolve_json) {
     collection facts;
     resolver.resolve(LIBFACTER_TESTS_DIRECTORY "/fixtures/facts/external/json/facts.json", facts);
     ASSERT_TRUE(!facts.empty());
-    ASSERT_NE(nullptr, facts.get<string_value>("json_fact1"));
-    ASSERT_EQ("foo", facts.get<string_value>("json_fact1")->value());
-    ASSERT_NE(nullptr, facts.get<integer_value>("json_fact2"));
-    ASSERT_EQ(5, facts.get<integer_value>("json_fact2")->value());
-    ASSERT_NE(nullptr, facts.get<boolean_value>("json_fact3"));
-    ASSERT_TRUE(facts.get<boolean_value>("json_fact3")->value());
+    ASSERT_NE(nullptr, facts.get<string_value>("json_fact|"));
+    ASSERT_EQ("foo", facts.get<string_value>("json_fact|")->value());
+    ASSERT_NE(nullptr, facts.get<integer_value>("json.fact2"));
+    ASSERT_EQ(5, facts.get<integer_value>("json.fact2")->value());
+    ASSERT_NE(nullptr, facts.get<boolean_value>("json fact3"));
+    ASSERT_TRUE(facts.get<boolean_value>("json fact3")->value());
     ASSERT_NE(nullptr, facts.get<double_value>("json_fact4"));
     ASSERT_DOUBLE_EQ(5.1, facts.get<double_value>("json_fact4")->value());
     auto array = facts.get<array_value>("json_fact5");

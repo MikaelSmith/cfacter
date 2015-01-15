@@ -24,11 +24,11 @@ TEST(facter_facts_windows_collection, resolve_external) {
     ASSERT_NE(nullptr, facts.get<string_value>("exe_fact1"));
     ASSERT_NE(nullptr, facts.get<string_value>("exe_fact2"));
     ASSERT_EQ(nullptr, facts.get<string_value>("exe_fact3"));
-    ASSERT_NE(nullptr, facts.get<string_value>("exe_fact4"));
+    ASSERT_NE(nullptr, facts.get<string_value>("exe fact.4"));
     ASSERT_NE(nullptr, facts.get<string_value>("ps1_fact1"));
     ASSERT_NE(nullptr, facts.get<string_value>("ps1_fact2"));
     ASSERT_EQ(nullptr, facts.get<string_value>("ps1_fact3"));
-    ASSERT_NE(nullptr, facts.get<string_value>("ps1_fact4"));
+    ASSERT_NE(nullptr, facts.get<string_value>("ps1 fact.4"));
 }
 
 TEST(facter_facts_posix_collection, resolve_external_relative) {

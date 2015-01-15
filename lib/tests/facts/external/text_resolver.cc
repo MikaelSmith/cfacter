@@ -35,7 +35,7 @@ TEST(facter_facts_external_text_resolver, resolve_text) {
     ASSERT_NE(nullptr, facts.get<string_value>("txt_fact2"));
     ASSERT_EQ("", facts.get<string_value>("txt_fact2")->value());
     ASSERT_EQ(nullptr, facts.get<string_value>("txt_fact3"));
-    ASSERT_NE(nullptr, facts.get<string_value>("txt_fact4"));
-    ASSERT_EQ(nullptr, facts.get<string_value>("TXT_Fact4"));
-    ASSERT_EQ("value2", facts.get<string_value>("txt_fact4")->value());
+    ASSERT_NE(nullptr, facts.get<string_value>("txt fact.4"));
+    ASSERT_EQ(nullptr, facts.get<string_value>("TXT Fact.4"));
+    ASSERT_EQ("value2", facts.get<string_value>("txt fact.4")->value());
 }

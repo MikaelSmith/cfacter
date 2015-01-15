@@ -280,7 +280,7 @@ vector<ruby_test_parameters> single_fact_tests = {
     ruby_test_parameters("double_fact.rb", "foo", "12.34"),
     ruby_test_parameters("array_fact.rb", "foo", "[\n  1,\n  true,\n  false,\n  \"foo\",\n  12.4,\n  [\n    1\n  ],\n  {\n    foo => \"bar\"\n  }\n]"),
     ruby_test_parameters("hash_fact.rb", "foo", "{\n  int => 1,\n  bool_true => true,\n  bool_false => false,\n  double => 12.34,\n  string => \"foo\",\n  array => [\n    1,\n    2,\n    3\n  ]\n}"),
-    ruby_test_parameters("value.rb", "foo", "\"baz\"", { { "bar", "baz" } }),
+    ruby_test_parameters("value.rb", "foo *foo", "\"baz\"", { { "bar", "baz" } }),
     ruby_test_parameters("fact.rb", "foo", "\"baz\"", { { "bar", "baz" } }),
     ruby_test_parameters("lookup.rb", "foo", "\"baz\"", { { "bar", "baz" } }),
     ruby_test_parameters("which.rb", "foo", "\"bar\""),

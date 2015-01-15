@@ -38,12 +38,12 @@ TEST(facter_facts_external_yaml_resolver, resolve_yaml) {
     collection facts;
     resolver.resolve(LIBFACTER_TESTS_DIRECTORY "/fixtures/facts/external/yaml/facts.yaml", facts);
     ASSERT_TRUE(!facts.empty());
-    ASSERT_NE(nullptr, facts.get<string_value>("yaml_fact1"));
-    ASSERT_EQ("foo", facts.get<string_value>("yaml_fact1")->value());
-    ASSERT_NE(nullptr, facts.get<integer_value>("yaml_fact2"));
-    ASSERT_EQ(5, facts.get<integer_value>("yaml_fact2")->value());
-    ASSERT_NE(nullptr, facts.get<boolean_value>("yaml_fact3"));
-    ASSERT_TRUE(facts.get<boolean_value>("yaml_fact3")->value());
+    ASSERT_NE(nullptr, facts.get<string_value>("yaml_fact|"));
+    ASSERT_EQ("foo", facts.get<string_value>("yaml_fact|")->value());
+    ASSERT_NE(nullptr, facts.get<integer_value>("yaml.fact2"));
+    ASSERT_EQ(5, facts.get<integer_value>("yaml.fact2")->value());
+    ASSERT_NE(nullptr, facts.get<boolean_value>("yaml fact3"));
+    ASSERT_TRUE(facts.get<boolean_value>("yaml fact3")->value());
     ASSERT_NE(nullptr, facts.get<double_value>("yaml_fact4"));
     ASSERT_DOUBLE_EQ(5.1, facts.get<double_value>("yaml_fact4")->value());
     auto array = facts.get<array_value>("yaml_fact5");
