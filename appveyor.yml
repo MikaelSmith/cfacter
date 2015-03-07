@@ -1,33 +1,60 @@
 version: 1.0.{build}
 clone_folder: c:\projects\cfacter
+clone_depth: 1
+  
 platform:
-  - x64
+- Win32
+- x64
+
+configuration:
+- Debug
+- Release
+
 install:
-  - git submodule update --init --recursive
+- cmd: git submodule update --init --recursive
 
-  - ps: choco install mingw-w64 -y -Version 4.8.3 -source https://www.myget.org/F/puppetlabs
-  - ps: $env:PATH = "C:\Ruby21-x64\bin;C:\tools\mingw64\bin;" + $env:PATH
+- ps: >-
 
-  - ps: wget 'https://s3.amazonaws.com/kylo-pl-bucket/boost_1_55_0-x86_64_mingw-w64_4.8.3_posix_seh.7z' -OutFile "$pwd\boost.7z"
-  - ps: 7z.exe x boost.7z -oC:\tools | FIND /V "ing  "
+    $env:PATH = $env:PATH.Replace('Git\bin', 'Git\cmd')
 
-  - ps: wget 'https://s3.amazonaws.com/kylo-pl-bucket/yaml-cpp-0.5.1-x86_64_mingw-w64_4.8.3_posix_seh.7z' -OutFile "$pwd\yaml-cpp.7z"
-  - ps: 7z.exe x yaml-cpp.7z -oC:\tools | FIND /V "ing  "
+    if ($env:PLATFORM -eq "Win32") {
+      choco install mingw-w32 -y -Version 4.8.3 -source https://www.myget.org/F/puppetlabs
+      $env:PATH = 'C:\tools\mingw32\bin;' + $env:PATH
+      $env:RUBY_VER = 'Ruby21'
+      $env:MINGW_VER = 'i686_mingw-w64_4.8.3_win32_sjlj'
+    } else {
+      choco install mingw-w64 -y -Version 4.8.3 -source https://www.myget.org/F/puppetlabs
+      $env:PATH = 'C:\tools\mingw64\bin;' + $env:PATH
+      $env:RUBY_VER = 'Ruby21-x64'
+      $env:MINGW_VER = 'x86_64_mingw-w64_4.8.3_win32_seh'
+    }
 
-  - ps: (Get-Content C:\Ruby21-x64\lib\ruby\2.1.0\dl.rb) | Foreach-Object {$_ -replace "warn ", "puts "} | Set-Content C:\Ruby21-x64\lib\ruby\2.1.0\dl.rb
-  - ps: gem install bundler -q --no-ri --no-rdoc
-  - ps: bundle install --gemfile=lib/Gemfile --quiet 2>&1 | out-null
+    wget "https://s3.amazonaws.com/kylo-pl-bucket/boost_1_55_0-$env:MINGW_VER.7z" -OutFile "$pwd\boost.7z"
+
+    7z.exe x boost.7z -oC:\tools | FIND /V "ing  "
+
+    wget "https://s3.amazonaws.com/kylo-pl-bucket/yaml-cpp-0.5.1-$env:MINGW_VER.7z" -OutFile "$pwd\yaml-cpp.7z"
+
+    7z.exe x yaml-cpp.7z -oC:\tools | FIND /V "ing  "
+
+    $env:PATH = "C:\$env:RUBY_VER\bin;" + $env:PATH
+
+    (Get-Content "C:\$env:RUBY_VER\lib\ruby\2.1.0\dl.rb") | Foreach-Object {$_ -replace "warn ", "puts "} | Set-Content "C:\$env:RUBY_VER\lib\ruby\2.1.0\dl.rb"
+
+    gem install bundler -q --no-ri --no-rdoc
+
+    bundle install --gemfile=lib/Gemfile --quiet 2>&1 | out-null
+
+before_build:
+- ps: cmake -G "MinGW Makefiles" -DBOOST_ROOT="C:\tools\boost_1_55_0-$env:MINGW_VER" -DYAMLCPP_ROOT="C:\tools\yaml-cpp-0.5.1-$env:MINGW_VER" -DBOOST_STATIC=ON -DBOOST_NOWIDE_SKIP_TESTS=ON -DCMAKE_INSTALL_PREFIX='C:\Program Files\CFACTER' -DCMAKE_BUILD_TYPE=$env:Configuration .
 
 build_script:
-  - ps: mv "C:\Program Files (x86)\Git\bin\sh.exe" "C:\Program Files (x86)\Git\bin\shxx.exe"
-  - ps: cmake -G "MinGW Makefiles" -DBOOST_ROOT="C:\tools\boost_1_55_0-x86_64_mingw-w64_4.8.3_posix_seh" -DYAMLCPP_ROOT="C:\tools\yaml-cpp-0.5.1-x86_64_mingw-w64_4.8.3_posix_seh" -DBOOST_STATIC=ON -DBOOST_NOWIDE_SKIP_TESTS=ON -DCMAKE_INSTALL_PREFIX="C:\Program Files\CFACTER" .
-  - ps: mv "C:\Program Files (x86)\Git\bin\shxx.exe" "C:\Program Files (x86)\Git\bin\sh.exe"
-  - ps: mingw32-make all_unity libfacter_test/fast -j2
+- ps: mingw32-make all_unity libfacter_test/fast -j2
 
 test_script:
-  - ps: ctest -V 2>&1 | %{ if ($_ -is [System.Management.Automation.ErrorRecord]) { $_ | c++filt } else { $_ } }
-  - ps: mingw32-make install/fast
+- ps: ctest -C $env:Configuration -V 2>&1 | %{ if ($_ -is [System.Management.Automation.ErrorRecord]) { $_ | c++filt } else { $_ } }
+- ps: mingw32-make install/fast
 
-  - ps: $env:PATH += ";C:\Program Files\CFACTER\bin"
-  - ps: cd lib
-  - ps: rspec 2>&1 | %{ if ($_ -is [System.Management.Automation.ErrorRecord]) { $_ | c++filt } else { $_ } }
+- ps: $env:PATH += ';C:\Program Files\CFACTER\bin'
+- ps: cd lib
+- ps: rspec 2>&1 | %{ if ($_ -is [System.Management.Automation.ErrorRecord]) { $_ | c++filt } else { $_ } }
