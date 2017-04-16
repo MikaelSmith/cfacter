@@ -5,6 +5,7 @@ Gemfile.local
 Gemfile.lock
 /nbproject
 compile_commands.json
+.idea/
 
 # Generated files
 /lib/inc/facter/export.h
